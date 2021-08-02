@@ -19,12 +19,35 @@ if not exist %enableflag% (
 :SERVICE_START
 echo %date% %time% service start >> %logfile%
 
+rem Get start time:
+for /F "tokens=1-4 delims=:.," %%a in ("%time%") do (
+    set /A "start=(((%%a*60)+1%%b %% 100)*60+1%%c %% 100)*100+1%%d %% 100"
+)
 
 :SERVICE_MAIN_LOOP
 
 echo %date% %time% main >> %logfile%
 
-ping 127.0.0.1 -n 3 -w 1000 > nul
+
+
+rem Get end time:
+for /F "tokens=1-4 delims=:.," %%a in ("%time%") do (
+    set /A "end=(((%%a*60)+1%%b %% 100)*60+1%%c %% 100)*100+1%%d %% 100"
+)
+
+rem Get elapsed time:
+set /A elapsed=end-start
+set /A elapsedsec=elapsed/100
+
+
+rem check if it is time to exit service
+if %elapsedsec% gtr 300 (
+    echo time is up
+	echo %date% %time% time is up >> %logfile%
+	goto SERVICE_END
+)
+
+timeout /t 1 >nul
 
 goto SERVICE_MAIN_LOOP
 
