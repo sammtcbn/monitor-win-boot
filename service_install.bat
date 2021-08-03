@@ -1,4 +1,4 @@
-echo off
+@echo off
 set currdir=%~dp0
 cd "%currdir%"
 

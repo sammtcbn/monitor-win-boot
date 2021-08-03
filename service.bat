@@ -1,4 +1,7 @@
 echo off
+
+setlocal enableextensions disabledelayedexpansion
+
 set currdir=%~dp0
 cd "%currdir%"
 
@@ -26,8 +29,13 @@ for /F "tokens=1-4 delims=:.," %%a in ("%time%") do (
 
 :SERVICE_MAIN_LOOP
 
-echo %date% %time% main >> %logfile%
+@rem echo %date% %time% main loop entry >> %logfile%
 
+rem ImageState
+for /f "tokens=1,2 delims==" %%a in (%WINDIR%\Setup\State\State.ini) do (
+    if %%a==ImageState set ImageState=%%b
+)
+echo %date% %time% ImageState = %ImageState% >> %logfile%
 
 
 rem Get end time:
