@@ -29,14 +29,11 @@ for /F "tokens=1-4 delims=:.," %%a in ("%time%") do (
 
 :SERVICE_MAIN_LOOP
 
-@rem echo %date% %time% main loop entry >> %logfile%
+rem echo %date% %time% main loop entry >> %logfile%
 
-rem ImageState
-for /f "tokens=1,2 delims==" %%a in (%WINDIR%\Setup\State\State.ini) do (
-    if %%a==ImageState set ImageState=%%b
-)
-echo %date% %time% ImageState = %ImageState% >> %logfile%
-
+call show_imagestate.bat
+call show_computername.bat
+rem call show_ip.bat
 
 rem Get end time:
 for /F "tokens=1-4 delims=:.," %%a in ("%time%") do (
@@ -49,7 +46,7 @@ set /A elapsedsec=elapsed/100
 
 
 rem check if it is time to exit service
-if %elapsedsec% gtr 300 (
+if %elapsedsec% gtr 180 (
     echo time is up
 	echo %date% %time% time is up >> %logfile%
 	goto SERVICE_END
